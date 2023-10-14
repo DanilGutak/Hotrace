@@ -31,11 +31,18 @@ void	*ft_calloc(size_t nmemb, size_t size)
 	return (res);
 }
 
-int	read_end(char **input, char *temp)
+char	*read_end(char **input, t_data *data)
 {
-	int	i;
+	int		i;
+	char	*temp;
 
 	i = 0;
+	temp = malloc(2);
+	if (!temp)
+	{
+		temp_fail(&*input, &*temp, &*data);
+		return (NULL);
+	}
 	if (read(0, temp, 1) == 0)
 	{
 		while (input[i])
@@ -44,10 +51,10 @@ int	read_end(char **input, char *temp)
 		}
 		free(input);
 		free(temp);
-		return (1);
+		return (NULL);
 	}
 	temp[1] = '\0';
-	return (0);
+	return (temp);
 }
 
 int	fill_data(t_data *data, char **input)

@@ -18,10 +18,12 @@ char				*ft_strdup(const char *s);
 size_t				ft_strlen(const char *s);
 char				**ft_split(char const *s, char c);
 int					ft_strcmp(char *s1, char *s2);
+int					search_str(char *str);
 char				*input_parser(char *s);
 int					input_parser2(char **input, char *str, char *temp,
 						t_data *data);
-int					read_end(char **input, char *temp);
+char				*read_end(char **input, t_data *data);
+int					temp_fail(char **input, char *temp, t_data *data);
 
 int					add(t_data *data, char *key, char *value);
 void				search(t_data *data, char *str);

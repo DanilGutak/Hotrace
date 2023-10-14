@@ -29,7 +29,7 @@ int	temp_fail(char **input, char *temp, t_data *data)
 	}
 	free(input);
 	free(temp);
-	return (1);
+	return (0);
 }
 
 char	*create_s(char *s, char *temp)
@@ -70,7 +70,7 @@ char	*input_parser(char *s)
 		if (!s)
 			return (0);
 		free(temp);
-		if (s[i] == '\n' && s[i - 1] == '\n')
+		if (s[i] == '\n' && (!s[i - 1] || s[i - 1] == '\n'))
 			break ;
 		i++;
 	}
@@ -81,25 +81,25 @@ int	input_parser2(char **input, char *str, char *temp, t_data *data)
 {
 	while (1)
 	{
-		temp = malloc(2);
-		if (!temp)
-			return (temp_fail(&*input, &*temp, &*data));
-		if (read_end(&*input, &*temp))
-			break ;
-		if (temp[0] == '\n')
+		if (!(temp = read_end(&*input, &*data)))
 		{
-			search(&*data, str);
-			free(str);
-			str = 0;
-			free(temp);
-			continue ;
+			if (search_str(str))
+				search(&*data, str);
+			break ;
 		}
+		if (temp[0] == '\n')
+			search(&*data, str);
 		if (str)
 			str = ft_strjoin(str, temp);
 		else
 			str = ft_strdup(temp);
 		if (!str)
 			return (str_fail(&*input, &*temp, &*data));
+		if (temp[0] == '\n')
+		{
+			free(str);
+			str = NULL;
+		}
 		free(temp);
 	}
 	return (0);
