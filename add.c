@@ -1,33 +1,5 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   add.c                                              :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: dgutak <dgutak@student.42vienna.com>       +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/14 11:33:30 by dgutak            #+#    #+#             */
-/*   Updated: 2023/10/14 12:49:23 by dgutak           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "hotrace.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
-int	ft_strlen(const char *str)
-{
-	int	n;
-
-	n = 0;
-	if (!str)
-		return (0);
-	while (str[n] != '\0')
-	{
-		n++;
-	}
-	return (n);
-}
 unsigned int	hash_fnv(char *str)
 {
 	unsigned int	fnv_prime;
@@ -46,29 +18,6 @@ unsigned int	hash_fnv(char *str)
 		i++;
 	}
 	return (hash);
-}
-char	*ft_strdup(char *src)
-{
-	char	*dest;
-	int		i;
-	int		size;
-
-	size = 0;
-	if (!src)
-		return (NULL);
-	while (src[size])
-		++size;
-	dest = (char *)malloc(sizeof(char) * (size + 1));
-	if (!dest)
-		return (NULL);
-	i = 0;
-	while (src[i])
-	{
-		dest[i] = src[i];
-		i++;
-	}
-	dest[i] = '\0';
-	return (dest);
 }
 
 int	add(t_data *data, char *key, char *value)
