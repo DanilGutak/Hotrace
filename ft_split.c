@@ -44,7 +44,7 @@ static char	**malloc_2d(char const *s, char c)
 	int		i;
 	int		j;
 
-	ret = malloc(((count_certain_ch((char *)s, c)) * 2 + 1) * sizeof(char *));
+	ret = malloc(((count_certain_ch((char *)s, c)) + 1) * sizeof(char *));
 	if (ret == NULL)
 		return (NULL);
 	i = -1;

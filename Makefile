@@ -6,7 +6,7 @@
 #    By: dgutak <dgutak@student.42vienna.com>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/10/14 10:42:49 by secker            #+#    #+#              #
-#    Updated: 2023/10/14 13:05:49 by dgutak           ###   ########.fr        #
+#    Updated: 2023/10/14 13:29:41 by dgutak           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,8 @@ CFLAGS	=	-Wall -Wextra -Werror -g
 
 SRC	=	hotrace.c	\
 		ft_split.c	\
-		hotrace_utils.c
+		hotrace_utils.c \
+		add.c
 
 OBJ =	$(SRC:.c=.o)
 

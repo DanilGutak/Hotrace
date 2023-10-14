@@ -1,4 +1,3 @@
-
 #include "hotrace.h"
 
 size_t	ft_strlen(const char *s)
@@ -6,6 +5,8 @@ size_t	ft_strlen(const char *s)
 	size_t	count;
 
 	count = 0;
+	if (!s)
+		return (0);
 	while (s[count] != '\0')
 		count++;
 	return (count);
@@ -34,11 +35,11 @@ char	*ft_strdup(const char *s)
 
 char	*ft_strjoin(char const *s1, char const *s2)
 {
-	char *str1;
-	char *str2;
-	char *jstr;
-	int i;
-	int j;
+	char	*str1;
+	char	*str2;
+	char	*jstr;
+	int		i;
+	int		j;
 
 	str1 = (char *)s1;
 	str2 = (char *)s2;

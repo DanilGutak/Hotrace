@@ -43,7 +43,7 @@ int	add(t_data *data, char *key, char *value)
 	return (1);
 }
 
-int	main(void)
+/* int	main(void)
 {
 	t_data data;
 
@@ -56,4 +56,4 @@ int	main(void)
 	printf("%s  %s\n", data.keys[6759], data.values[6759]);
 	printf("%s  %s\n", data.keys[7404], data.values[7404]);
 	printf("%s  %s\n", data.keys[9088], data.values[9088]);
-}
+} */
