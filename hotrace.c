@@ -1,4 +1,3 @@
-
 #include "hotrace.h"
 
 void	ft_bzero(void *s, size_t n)
@@ -31,116 +30,67 @@ void	*ft_calloc(size_t nmemb, size_t size)
 	ft_bzero(res, nmemb * size);
 	return (res);
 }
+
+int	read_end(char **input, char *temp)
+{
+	int	i;
+
+	i = 0;
+	if (read(0, temp, 1) == 0)
+	{
+		while (input[i])
+		{
+			free(input[i++]);
+		}
+		free(input);
+		free(temp);
+		return (1);
+	}
+	temp[1] = '\0';
+	return (0);
+}
+
+int	fill_data(t_data *data, char **input)
+{
+	int	i;
+
+	while (input[data->length])
+		data->length++;
+	data->length += 2000000;
+	i = 1;
+	data->keys = ft_calloc(data->length, sizeof(char *));
+	data->values = ft_calloc(data->length, sizeof(char *));
+	while ((unsigned int)i < data->length - 2000000)
+	{
+		add(&*data, input[i - 1], input[i]);
+		i += 2;
+	}
+	return (0);
+}
+
 int	main(void)
 {
 	char	**input;
 	char	*s;
-	char    *temp;
+	char	*temp;
 	char	*str;
-	int		i;
 	t_data	data;
 
-	i = 0;
-	s = NULL;
 	str = NULL;
-    temp = NULL;
-	while (1)
-	{
-        temp = malloc(2);
-		if (read(0, temp, 1) == 0)
-		{
-            free(temp);
-			free(s);
-			return (1);
-		}
-        temp[1]='\0';
-		if (s)
-			s = ft_strjoin(s, temp);
-		else
-			s = ft_strdup(temp);
-        free(temp);
-		if (s[i] == '\n' && s[i - 1] == '\n')
-			break ;
-		i++;
-	}
-	input = ft_split(s, '\n');
+	temp = NULL;
+	s = NULL;
 	data.length = 0;
-	while (input[data.length])
-		data.length++;
-	data.length += 2000000;
-	i = 1;
-	data.keys = ft_calloc(data.length, sizeof(char *));
-	data.values = ft_calloc(data.length, sizeof(char *));
-	while ((unsigned int)i < data.length - 2000000)
-	{
-		add(&data, input[i - 1], input[i]);
-		i += 2;
-	}
+	s = input_parser(s);
+	if (!s)
+		return (1);
+	input = ft_split(s, '\n');
 	free(s);
-	i = 0;
-	while (1)
-	{
-		temp = malloc(2);
-		if (read(0, temp, 1) == 0)
-		{
-			while (input[i])
-			{
-				free(input[i++]);
-			}
-			free(input);
-			free(temp);
-			break ;
-		}
-		temp[1] = '\0';
-		if (temp[0] == '\n')
-		{
-			search(&data, str);
-			free(str);
-			str = 0;
-			free(temp);
-			continue ;
-		}
-		if (str)
-			str = ft_strjoin(str, temp);
-		else
-			str = ft_strdup(temp);
-		free(temp);
-	}
+	if (!input)
+		return (1);
+	if (fill_data(&data, &*input))
+		return (1);
+	if (input_parser2(&*input, &*str, &*temp, &data))
+		return (1);
 	free_double_p(data.keys, data.length);
 	free_double_p(data.values, data.length);
-}
-int	ft_strcmp(char *s1, char *s2)
-{
-	if (!s1 || !s2)
-		return (-1);
-	while (*s1 && *s2 && (*s1 == *s2))
-	{
-		s1++;
-		s2++;
-	}
-	return (*(unsigned char *)s1 - *(unsigned char *)s2);
-}
-
-void	search(t_data *data, char *str)
-{
-	unsigned int index;
-
-	if (!str)
-	{
-		write(1,": Not found.\n", 13);
-		return ;
-	}
-	index = hash_fnv(str) % data->length;
-	while (index < data->length)
-	{
-		if (ft_strcmp(data->keys[index], str) == 0)
-		{
-			write(1, data->values[index], ft_strlen(data->values[index]));
-			write(1,"\n", 1);
-			return ;
-		}
-		index++;
-	}
-	write(1,str, ft_strlen(str));
-	write(1,": Not found.\n", 13);
 }

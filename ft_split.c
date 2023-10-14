@@ -45,7 +45,7 @@ static char	**malloc_2d(char const *s, char c)
 	int		j;
 
 	ret = malloc(((count_certain_ch((char *)s, c)) + 1) * sizeof(char *));
-	if (ret == NULL)
+	if (!ret)
 		return (NULL);
 	i = -1;
 	j = 0;
@@ -54,7 +54,7 @@ static char	**malloc_2d(char const *s, char c)
 		if (s[i] != c)
 		{
 			ret[j] = malloc((getlen_till_ch((char *)s + i, c) + 1));
-			if (ret[j++] == NULL)
+			if (!ret[j++])
 				return (NULL);
 			while (s[i] != c && s[i] != '\0')
 				i++;
