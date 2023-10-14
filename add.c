@@ -35,25 +35,9 @@ int	add(t_data *data, char *key, char *value)
 			data->values[index] = ft_strdup(value);
 			if (!data->values[index])
 				return (1);
-			printf("%d\n", index);
 			return (0);
 		}
 		index++;
 	}
 	return (1);
 }
-
-/* int	main(void)
-{
-	t_data data;
-
-	data.keys = malloc(21000 * sizeof(char *));
-	data.values = malloc(21000 * sizeof(char *));
-	data.length = 21000;
-	add(&data, "kok", "ya ebu");
-	add(&data, "Danil", "Gutak");
-	add(&data,array[0], array[1]);
-	printf("%s  %s\n", data.keys[6759], data.values[6759]);
-	printf("%s  %s\n", data.keys[7404], data.values[7404]);
-	printf("%s  %s\n", data.keys[9088], data.values[9088]);
-} */

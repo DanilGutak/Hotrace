@@ -1,5 +1,22 @@
 #include "hotrace.h"
 
+void	free_double_p(char **p, unsigned int j)
+{
+	int	i;
+
+	i = 0;
+	if (p)
+	{
+		while ((unsigned int)i < j)
+		{
+			if (p[i])
+				free(p[i]);
+			i++;
+		}
+		free(p);
+	}
+}
+
 size_t	ft_strlen(const char *s)
 {
 	size_t	count;
@@ -58,6 +75,6 @@ char	*ft_strjoin(char *s1, char const *s2)
 	while (str2[i])
 		jstr[j++] = str2[i++];
 	jstr[j] = '\0';
-    free(str1);
+	free(str1);
 	return (jstr);
 }

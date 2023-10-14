@@ -11,6 +11,7 @@ void	ft_bzero(void *s, size_t n)
 		*temp++ = '\0';
 	}
 }
+
 void	*ft_calloc(size_t nmemb, size_t size)
 {
 	void	*res;
@@ -88,7 +89,7 @@ int	main(void)
 			}
 			free(input);
 			free(temp);
-			exit(1);
+			break ;
 		}
 		temp[1] = '\0';
 		if (temp[0] == '\n')
@@ -105,6 +106,8 @@ int	main(void)
 			str = ft_strdup(temp);
 		free(temp);
 	}
+	free_double_p(data.keys, data.length);
+	free_double_p(data.values, data.length);
 }
 int	ft_strcmp(char *s1, char *s2)
 {
@@ -124,19 +127,20 @@ void	search(t_data *data, char *str)
 
 	if (!str)
 	{
-		printf("lol not type\n");
+		write(1,": Not found.\n", 13);
 		return ;
 	}
-
 	index = hash_fnv(str) % data->length;
 	while (index < data->length)
 	{
 		if (ft_strcmp(data->keys[index], str) == 0)
 		{
-			printf("%s\n", data->values[index]);
+			write(1, data->values[index], ft_strlen(data->values[index]));
+			write(1,"\n", 1);
 			return ;
 		}
 		index++;
 	}
-	printf("lol not found\n");
+	write(1,str, ft_strlen(str));
+	write(1,": Not found.\n", 13);
 }

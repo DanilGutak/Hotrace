@@ -21,5 +21,6 @@ char				**ft_split(char const *s, char c);
 int					add(t_data *data, char *key, char *value);
 void				search(t_data *data, char *str);
 unsigned int		hash_fnv(char *str);
+void				free_double_p(char **p, unsigned int j);
 
 #endif
