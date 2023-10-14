@@ -81,7 +81,8 @@ int	input_parser2(char **input, char *str, char *temp, t_data *data)
 {
 	while (1)
 	{
-		if (!(temp = read_end(&*input, &*data)))
+		temp = read_end(&*input, &*data);
+		if (!temp)
 		{
 			if (search_str(str))
 				search(&*data, str);

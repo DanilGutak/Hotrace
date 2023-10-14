@@ -6,7 +6,7 @@
 #    By: secker <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/10/14 10:42:49 by secker            #+#    #+#              #
-#    Updated: 2023/10/14 17:36:10 by secker           ###   ########.fr        #
+#    Updated: 2023/10/14 19:41:46 by secker           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,8 @@ SRC	=	hotrace.c	\
 		ft_split.c	\
 		hotrace_utils.c \
 		add.c	\
-		input_parser.c
+		input_parser.c	\
+		too_full.c
 
 OBJ =	$(SRC:.c=.o)
 
