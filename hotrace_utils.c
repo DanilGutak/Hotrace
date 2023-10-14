@@ -33,7 +33,7 @@ char	*ft_strdup(const char *s)
 	return (str);
 }
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoin(char *s1, char const *s2)
 {
 	char	*str1;
 	char	*str2;
@@ -58,5 +58,6 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	while (str2[i])
 		jstr[j++] = str2[i++];
 	jstr[j] = '\0';
+    free(str1);
 	return (jstr);
 }

@@ -34,7 +34,7 @@ int	main(void)
 {
 	char	**input;
 	char	*s;
-	char	*temp;
+	char    *temp;
 	char	*str;
 	int		i;
 	t_data	data;
@@ -42,18 +42,24 @@ int	main(void)
 	i = 0;
 	s = NULL;
 	str = NULL;
+    temp = NULL;
 	while (1)
 	{
-		temp = malloc(2);
-		read(0, temp, 1);
-		temp[1] = '\0';
+        temp = malloc(2);
+		if (read(0, temp, 1) == 0)
+		{
+            free(temp);
+			free(s);
+			return (1);
+		}
+        temp[1]='\0';
 		if (s)
 			s = ft_strjoin(s, temp);
 		else
 			s = ft_strdup(temp);
+        free(temp);
 		if (s[i] == '\n' && s[i - 1] == '\n')
 			break ;
-		free(temp);
 		i++;
 	}
 	input = ft_split(s, '\n');
@@ -63,11 +69,11 @@ int	main(void)
 	data.length += 2000000;
 	i = 1;
 	data.keys = ft_calloc(data.length, sizeof(char *));
-	data.values= ft_calloc(data.length, sizeof(char *));
-	while((unsigned int)i < data.length - 2000000)
+	data.values = ft_calloc(data.length, sizeof(char *));
+	while ((unsigned int)i < data.length - 2000000)
 	{
-		add(&data, input[i-1],input[i]);
-		i +=2;
+		add(&data, input[i - 1], input[i]);
+		i += 2;
 	}
 	free(s);
 	i = 0;
@@ -75,23 +81,30 @@ int	main(void)
 	{
 		temp = malloc(2);
 		if (read(0, temp, 1) == 0)
+		{
+			while (input[i])
+			{
+				free(input[i++]);
+			}
+			free(input);
+			free(temp);
 			exit(1);
+		}
 		temp[1] = '\0';
 		if (temp[0] == '\n')
-			{
-				search(&data, str);
-				free(str);
-				str = 0;
-				free(temp);
-				continue ;
-			}
+		{
+			search(&data, str);
+			free(str);
+			str = 0;
+			free(temp);
+			continue ;
+		}
 		if (str)
 			str = ft_strjoin(str, temp);
 		else
 			str = ft_strdup(temp);
 		free(temp);
 	}
-        printf("%s", str);
 }
 int	ft_strcmp(char *s1, char *s2)
 {
@@ -105,20 +118,20 @@ int	ft_strcmp(char *s1, char *s2)
 	return (*(unsigned char *)s1 - *(unsigned char *)s2);
 }
 
-void search(t_data *data, char *str)
+void	search(t_data *data, char *str)
 {
-	unsigned int	index;
+	unsigned int index;
 
 	if (!str)
 	{
-	printf("lol not type\n");
-	return ;
+		printf("lol not type\n");
+		return ;
 	}
-		
+
 	index = hash_fnv(str) % data->length;
 	while (index < data->length)
 	{
-		if (ft_strcmp(data->keys[index],str) == 0)
+		if (ft_strcmp(data->keys[index], str) == 0)
 		{
 			printf("%s\n", data->values[index]);
 			return ;
