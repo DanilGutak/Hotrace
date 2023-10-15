@@ -19,7 +19,7 @@ SRC	=	hotrace.c	\
 		hotrace_utils.c \
 		add.c	\
 		input_parser.c	\
-		too_full.c
+		too_full.c get_next_line.c get_next_line_utils.c
 
 OBJ =	$(SRC:.c=.o)
 

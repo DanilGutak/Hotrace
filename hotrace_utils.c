@@ -29,7 +29,7 @@ void	free_double_p(char **p, unsigned int j)
 	}
 }
 
-size_t	ft_strlen(const char *s)
+size_t	ft_strlen1(const char *s)
 {
 	size_t	count;
 
@@ -62,7 +62,7 @@ char	*ft_strdup(const char *s)
 	return (str);
 }
 
-char	*ft_strjoin(char *s1, char const *s2)
+char	*ft_strjoin1(char *s1, char const *s2)
 {
 	char	*str1;
 	char	*str2;

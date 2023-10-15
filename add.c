@@ -10,7 +10,7 @@ void	search(t_data *data, char *str)
 		return ;
 	}
 	index = hash_fnv(str) % data->length;
-	while (index < data->length)
+	while (index < data->length && data->keys[index] != 0)
 	{
 		if (ft_strcmp(data->keys[index], str) == 0)
 		{
@@ -51,13 +51,35 @@ int	add(t_data *data, char *key, char *value)
 	index = hash_fnv(key) % data->length;
 	while (index < data->length)
 	{
-		if (!data->keys[index])
+		if (!data->keys[index] || ft_strcmp(data->keys[index],key) == 0)
 		{
 			data->keys[index] = ft_strdup(key);
 			if (!data->keys[index])
 				return (1);
 			data->values[index] = ft_strdup(value);
 			if (!data->values[index])
+				return (1);
+			return (0);
+		}
+		index++;
+	}
+	return (1);
+}
+
+int	add2(t_data *data, char *key, char *value)
+{
+	unsigned int	index;
+
+	index = hash_fnv(key) % data->length;
+	while (index < data->length)
+	{
+		if (!data->temp1[index]|| ft_strcmp(data->temp1[index],key) == 0)
+		{
+			data->temp1[index] = ft_strdup(key);
+			if (!data->temp1[index])
+				return (1);
+			data->temp2[index] = ft_strdup(value);
+			if (!data->temp2[index])
 				return (1);
 			return (0);
 		}
