@@ -1,31 +1,5 @@
 #include "hotrace.h"
 
-char	*read_end(char **input, t_data *data)
-{
-	int		i;
-	char	*temp;
-
-	i = 0;
-	temp = malloc(2);
-	if (!temp)
-	{
-		temp_fail(&*input, &*temp, &*data);
-		return (NULL);
-	}
-	if (read(0, temp, 1) == 0)
-	{
-		while (input[i])
-		{
-			free(input[i++]);
-		}
-		free(input);
-		free(temp);
-		return (NULL);
-	}
-	temp[1] = '\0';
-	return (temp);
-}
-
 static int	checkset(char c, char const *set)
 {
 	while (*set)
