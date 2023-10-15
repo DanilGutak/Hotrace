@@ -6,11 +6,11 @@
 /*   By: dgutak <dgutak@student.42vienna.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/16 14:13:21 by dgutak            #+#    #+#             */
-/*   Updated: 2023/07/17 14:37:27 by dgutak           ###   ########.fr       */
+/*   Updated: 2023/10/15 14:34:19 by dgutak           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "hotrace.h"
 
 char	*take_line(char *buf)
 {
@@ -61,38 +61,35 @@ char	*readfunk(int fd, char *buf)
 
 	temp = malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (!temp)
+	{
+		free(buf);
 		return (0);
+	}
 	readen = 1;
 	while (!ft_strchr(buf, '\n') && readen != 0)
 	{
 		readen = read(fd, temp, BUFFER_SIZE);
 		if (readen < 0)
-		{
-			if (buf != NULL)
-			{
-				free(buf);
-				buf = 0;
-			}
-			return (free(temp), NULL);
-		}
+			return (free(temp), free(buf), NULL);
 		temp[readen] = '\0';
 		buf = ft_strjoin(buf, temp);
+		if (!buf)
+			return (free(temp), buf);
 	}
 	return (free(temp), buf);
 }
 
-char	*get_next_line(int fd)
+char	*get_next_line(int fd, t_data *data)
 {
-	static char	*buffer[OPEN_MAX];
 	char		*ret;
 
 	if (fd < 0 || BUFFER_SIZE < 1)
 		return (NULL);
-	buffer[fd] = readfunk(fd, buffer[fd]);
-	if (!buffer[fd])
+	data->gnl_buffer = readfunk(fd, data->gnl_buffer);
+	if (!data->gnl_buffer)
 		return (NULL);
-	ret = take_line(buffer[fd]);
-	buffer[fd] = delete_line(buffer[fd]);
+	ret = take_line(data->gnl_buffer);
+	data->gnl_buffer = delete_line(data->gnl_buffer);
 	return (ret);
 }
 /*

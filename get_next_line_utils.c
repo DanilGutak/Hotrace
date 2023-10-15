@@ -6,11 +6,11 @@
 /*   By: dgutak <dgutak@student.42vienna.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/16 14:13:25 by dgutak            #+#    #+#             */
-/*   Updated: 2023/07/17 14:40:31 by dgutak           ###   ########.fr       */
+/*   Updated: 2023/10/15 13:20:27 by dgutak           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "hotrace.h"
 
 void	*ft_calloc(size_t nmemb, size_t size)
 {

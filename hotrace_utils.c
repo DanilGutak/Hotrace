@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   hotrace_utils.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dgutak <dgutak@student.42vienna.com>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/10/15 16:53:09 by dgutak            #+#    #+#             */
+/*   Updated: 2023/10/15 17:21:14 by dgutak           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "hotrace.h"
 
 int	ft_strcmp(char *s1, char *s2)
@@ -10,6 +22,17 @@ int	ft_strcmp(char *s1, char *s2)
 		s2++;
 	}
 	return (*(unsigned char *)s1 - *(unsigned char *)s2);
+}
+
+int	free_all(t_data *data)
+{
+	free_double_p(data->keys, data->length);
+	free_double_p(data->values, data->length);
+	free_double_p(data->temp1, data->length);
+	free_double_p(data->temp2, data->length);
+	if (data->gnl_buffer)
+		free(data->gnl_buffer);
+	return (1);
 }
 
 void	free_double_p(char **p, unsigned int j)
@@ -29,16 +52,12 @@ void	free_double_p(char **p, unsigned int j)
 	}
 }
 
-size_t	ft_strlen1(const char *s)
+int	checkset(char c, char const *set)
 {
-	size_t	count;
-
-	count = 0;
-	if (!s)
-		return (0);
-	while (s[count] != '\0')
-		count++;
-	return (count);
+	while (*set)
+		if (c == *set++)
+			return (1);
+	return (0);
 }
 
 char	*ft_strdup(const char *s)
@@ -61,4 +80,3 @@ char	*ft_strdup(const char *s)
 	}
 	return (str);
 }
-
