@@ -3,23 +3,21 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: secker <marvin@42.fr>                      +#+  +:+       +#+         #
+#    By: dgutak <dgutak@student.42vienna.com>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/10/14 10:42:49 by secker            #+#    #+#              #
-#    Updated: 2023/10/14 19:41:46 by secker           ###   ########.fr        #
+#    Updated: 2023/10/15 17:04:28 by dgutak           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME =	hotrace
 CC	=	cc
-CFLAGS	=	-Wall -Wextra -Werror -g
+CFLAGS	=	-Wall -Wextra -Werror -g -Ofast -march=native
 
 SRC	=	hotrace.c	\
-		ft_split.c	\
 		hotrace_utils.c \
 		add.c	\
-		input_parser.c	\
-		too_full.c
+		get_next_line.c get_next_line_utils.c search.c
 
 OBJ =	$(SRC:.c=.o)
 

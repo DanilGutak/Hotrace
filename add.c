@@ -1,58 +1,41 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   add.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dgutak <dgutak@student.42vienna.com>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/10/15 16:53:19 by dgutak            #+#    #+#             */
+/*   Updated: 2023/10/15 19:01:59 by dgutak           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "hotrace.h"
 
-void	search(t_data *data, char *str)
+unsigned long	hash_fnv(char *str)
 {
-	unsigned int	index;
+	unsigned long	hash;
 
-	if (!str)
+	hash = 5381;
+	while (*str)
 	{
-		write(1, ": Not found.\n", 13);
-		return ;
-	}
-	index = hash_fnv(str) % data->length;
-	while (index < data->length)
-	{
-		if (ft_strcmp(data->keys[index], str) == 0)
-		{
-			write(1, data->values[index], ft_strlen(data->values[index]));
-			write(1, "\n", 1);
-			return ;
-		}
-		index++;
-	}
-	write(1, str, ft_strlen(str));
-	write(1, ": Not found.\n", 13);
-}
-
-unsigned int	hash_fnv(char *str)
-{
-	unsigned int	fnv_prime;
-	unsigned int	hash;
-	unsigned int	i;
-	unsigned int	length;
-
-	fnv_prime = 0x811C9DC5;
-	hash = 0;
-	i = 0;
-	length = ft_strlen(str);
-	while (i < length)
-	{
-		hash *= fnv_prime;
-		hash ^= (*str);
-		i++;
+		hash = ((hash << 5) + hash) + (*str);
+		str++;
 	}
 	return (hash);
 }
 
-int	add(t_data *data, char *key, char *value)
+int	add_add(t_data *data, char *key, char *value, unsigned int index)
 {
-	unsigned int	index;
-
-	index = hash_fnv(key) % data->length;
-	while (index < data->length)
+	while (index > 0)
 	{
-		if (!data->keys[index])
+		if (!data->keys[index] || ft_strcmp(data->keys[index], key) == 0)
 		{
+			if (data->keys[index])
+			{
+				free(data->keys[index]);
+				free(data->values[index]);
+			}
 			data->keys[index] = ft_strdup(key);
 			if (!data->keys[index])
 				return (1);
@@ -61,7 +44,88 @@ int	add(t_data *data, char *key, char *value)
 				return (1);
 			return (0);
 		}
-		index++;
+		index--;
 	}
 	return (1);
+}
+
+int	add(t_data *data, char *key, char *value)
+{
+	unsigned int	index;
+	unsigned int	i;
+
+	i = hash_fnv(key) % data->length;
+	index = i - 1;
+	while (++index < data->length)
+	{
+		if (!data->keys[index] || ft_strcmp(data->keys[index], key) == 0)
+		{
+			if (data->keys[index])
+			{
+				free(data->keys[index]);
+				free(data->values[index]);
+			}
+			data->keys[index] = ft_strdup(key);
+			if (!data->keys[index])
+				return (1);
+			data->values[index] = ft_strdup(value);
+			if (!data->values[index])
+				return (1);
+			return (0);
+		}
+	}
+	return (add_add(data, key, value, i));
+}
+
+int	add_add2(t_data *data, char *key, char *value, unsigned int index)
+{
+	while (index > 0)
+	{
+		if (!data->keys[index] || ft_strcmp(data->keys[index], key) == 0)
+		{
+			if (data->keys[index])
+			{
+				free(data->keys[index]);
+				free(data->values[index]);
+			}
+			data->keys[index] = ft_strdup(key);
+			if (!data->keys[index])
+				return (1);
+			data->values[index] = ft_strdup(value);
+			if (!data->values[index])
+				return (1);
+			return (0);
+		}
+		index--;
+	}
+	return (1);
+}
+
+int	add2(t_data *data, char *key, char *value)
+{
+	unsigned int	index;
+	unsigned int	i;
+
+	i = hash_fnv(key) % data->length;
+	index = i;
+	while (index < data->length)
+	{
+		if (!data->temp1[index] || ft_strcmp(data->temp1[index], key) == 0)
+		{
+			if (data->temp1[index])
+			{
+				free(data->temp1[index]);
+				free(data->temp2[index]);
+			}
+			data->temp1[index] = ft_strdup(key);
+			if (!data->temp1[index])
+				return (1);
+			data->temp2[index] = ft_strdup(value);
+			if (!data->temp2[index])
+				return (1);
+			return (0);
+		}
+		index++;
+	}
+	return (add_add2(data, key, value, i));
 }

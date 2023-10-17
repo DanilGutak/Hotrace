@@ -1,103 +1,137 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   hotrace.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dgutak <dgutak@student.42vienna.com>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/10/15 16:53:32 by dgutak            #+#    #+#             */
+/*   Updated: 2023/10/15 17:54:06 by dgutak           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "hotrace.h"
 
-void	ft_bzero(void *s, size_t n)
+char	*ft_strtrim(char *s1, char *set)
 {
-	unsigned char	*temp;
+	int		i;
+	int		j;
+	char	*res;
+	char	*buf;
 
-	temp = (unsigned char *)s;
-	while (n--)
-	{
-		*temp++ = '\0';
-	}
-}
-
-void	*ft_calloc(size_t nmemb, size_t size)
-{
-	void	*res;
-	size_t	check;
-
-	check = nmemb * size;
-	if (nmemb != 0 && check / nmemb != size)
-		return (0);
-	if (nmemb == 0 || size == 0)
-	{
-		nmemb = 1;
-		size = 1;
-	}
-	res = malloc(nmemb * size);
+	i = -1;
+	buf = s1;
+	while (checkset(*s1, set) == 1)
+		s1++;
+	j = ft_strlen(s1) - 1;
+	while (j >= 0 && checkset(s1[j], set) == 1)
+		j--;
+	res = malloc(sizeof(char) * (j + 2));
 	if (!res)
+	{
+		free(buf);
 		return (0);
-	ft_bzero(res, nmemb * size);
+	}
+	while (++i > -1 && j-- >= 0)
+		res[i] = s1[i];
+	res[i] = '\0';
+	free(buf);
 	return (res);
 }
 
-char	*read_end(char **input, t_data *data)
+int	add_cycle(t_data *data)
 {
-	int		i;
-	char	*temp;
+	char	*temp1;
+	char	*temp2;
 
-	i = 0;
-	temp = malloc(2);
-	if (!temp)
-	{
-		temp_fail(&*input, &*temp, &*data);
-		return (NULL);
-	}
-	if (read(0, temp, 1) == 0)
-	{
-		while (input[i])
-		{
-			free(input[i++]);
-		}
-		free(input);
-		free(temp);
-		return (NULL);
-	}
-	temp[1] = '\0';
-	return (temp);
+	temp1 = get_next_line(0, data);
+	if (!temp1)
+		return (1);
+	if (temp1[0] == '\n')
+		return (free(temp1), 2);
+	temp1 = ft_strtrim(temp1, "\n");
+	if (!temp1)
+		return (1);
+	temp2 = get_next_line(0, data);
+	if (!temp2)
+		return (free(temp1), 1);
+	if (temp2[0] == '\n')
+		return (free(temp1), free(temp2), 2);
+	temp2 = ft_strtrim(temp2, "\n");
+	if (!temp2)
+		return (free(temp1), 1);
+	if (add(data, temp1, temp2) == 1)
+		return (free(temp1), free(temp2), 1);
+	free(temp1);
+	free(temp2);
+	return (0);
 }
 
-int	fill_data(t_data *data, char **input)
+int	realloc_rehash(t_data *data)
 {
-	int	i;
+	unsigned int	i;
 
-	while (input[data->length])
-		data->length++;
+	i = 0;
+	data->temp1 = ft_calloc(data->length + 2000000, sizeof(char *));
+	if (!data->temp1)
+		return (1);
+	data->temp2 = ft_calloc(data->length + 2000000, sizeof(char *));
+	if (!data->temp2)
+		return (free(data->temp1), 1);
 	data->length += 2000000;
-	i = 1;
+	while (i < data->length - 2000000)
+	{
+		if (data->keys[i] != 0 && add2(data, data->keys[i],
+				data->values[i]) == 1)
+			return (free_all(data));
+	}
+	free_double_p(data->temp1, data->length);
+	free_double_p(data->temp2, data->length);
+	data->length += 2000000;
+	return (0);
+}
+
+int	data_init(t_data *data)
+{
+	data->length = 2000000;
+	data->count = 0;
+	data->keys = 0;
+	data->values = 0;
+	data->temp1 = NULL;
+	data->temp2 = NULL;
+	data->gnl_buffer = NULL;
 	data->keys = ft_calloc(data->length, sizeof(char *));
 	data->values = ft_calloc(data->length, sizeof(char *));
-	while ((unsigned int)i < data->length - 2000000)
-	{
-		add(&*data, input[i - 1], input[i]);
-		i += 2;
-	}
+	if (!data->keys || !data->values)
+		return (free_all(data));
 	return (0);
 }
 
 int	main(void)
 {
-	char	**input;
-	char	*s;
-	char	*temp;
-	char	*str;
 	t_data	data;
 
-	str = NULL;
-	temp = NULL;
-	s = NULL;
-	data.length = 0;
-	s = input_parser(s);
-	if (!s)
+	if (data_init(&data) == 1)
 		return (1);
-	input = ft_split(s, '\n');
-	free(s);
-	if (!input)
-		return (1);
-	if (fill_data(&data, &*input))
-		return (1);
-	if (input_parser2(&*input, &*str, &*temp, &data))
-		return (1);
-	free_double_p(data.keys, data.length);
-	free_double_p(data.values, data.length);
+	while (1)
+	{
+		data.res = add_cycle(&data);
+		if (data.res == 2)
+			break ;
+		if (data.res == 1 || ((data.count > data.length / 2)
+				&& realloc_rehash(&data) == 1))
+			return (free_all(&data));
+	}
+	while (1)
+	{
+		data.buffer = get_next_line(0, &data);
+		if (!data.buffer)
+			return (free_all(&data));
+		data.buffer = ft_strtrim(data.buffer, "\n");
+		if (!data.buffer)
+			return (free_all(&data));
+		search(&data, data.buffer);
+		if (data.buffer)
+			free(data.buffer);
+	}
 }
